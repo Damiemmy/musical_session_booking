@@ -1,0 +1,155 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare HMS - Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-image {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: url("https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=1400&q=80");
+            background-size: cover;
+            background-position: center;
+            filter: blur(6px) brightness(0.75);
+            transform: scale(1.1);
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(13,110,253,0.25), rgba(25,135,84,0.25));
+            z-index: -1;
+        }
+
+        .navbar {
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.7);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 35px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .title {
+            font-weight: 700;
+            color: #0d6efd;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .btn-primary {
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(13,110,253,0.3);
+        }
+
+        .btn-google {
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .btn-google:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .center-wrap {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="bg-image"></div>
+<div class="overlay"></div>
+
+<nav class="navbar fixed-top px-4 py-3 shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-primary">🏥 MediCare HMS</a>
+        <div class="ms-auto text-muted small">Smart Healthcare System</div>
+    </div>
+</nav>
+
+<div class="center-wrap" style="margin-top: 70px;">
+    <div class="login-card">
+
+        <div class="text-center mb-4">
+            <h2 class="title">Welcome Back</h2>
+            <p class="subtitle">Secure access to dashboard</p>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Login
+            </button>
+        </form>
+
+        <div class="text-center my-3 text-muted">
+            OR
+        </div>
+
+        <!-- GOOGLE LOGIN (FIXED) -->
+        <a href="{% provider_login_url 'google' process='login' %}"
+           class="btn btn-google w-100 d-flex align-items-center justify-content-center gap-2">
+
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20">
+            Continue with Google
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>

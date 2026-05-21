@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <h1>
+    Available Slots for Dr. {{ doctor.username }}
+</h1>
+
+{% for slot in slots %}
+
+    <p>
+
+        {{ slot.start_time }}
+        →
+        {{ slot.end_time }}
+
+        <a href="{% url 'book_slot' slot.id %}">
+            Book
+        </a>
+
+    </p>
+
+{% empty %}
+
+    <p>No available slots.</p>
+
+{% endfor %}
+
+</body>
+</html>

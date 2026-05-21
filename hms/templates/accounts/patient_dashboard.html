@@ -1,0 +1,16 @@
+<h1>Patient Dashboard</h1>
+
+<p>
+    Welcome {{ request.user.username }}
+</p>
+
+<a href="{% url 'doctors_list' %}">
+    View Doctors
+</a>
+
+<br><br>
+
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>

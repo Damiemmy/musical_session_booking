@@ -1,0 +1,18 @@
+<h1>Login</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Login</button>
+    <a href="/signup/">
+    signup
+</a>
+</form>
+
+<hr>
+
+<a href="/accounts/google/login/">
+    Continue with Google
+</a>

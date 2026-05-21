@@ -1,0 +1,15 @@
+<h1>Doctors</h1>
+
+{% for doctor in doctors %}
+
+    <p>
+
+        Dr. {{ doctor.username }}
+
+        <a href="{% url 'doctor_slots_available' doctor.id %}">
+            View Slots
+        </a>
+
+    </p>
+
+{% endfor %}
