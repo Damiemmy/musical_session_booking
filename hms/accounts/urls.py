@@ -6,7 +6,7 @@ urlpatterns = [
     path("signup/", signup_view, name="signup"),
 
     path(
-        "/accounts/login/",
+        "login/",
         LoginView.as_view(
             template_name="accounts/login.html"
         ),

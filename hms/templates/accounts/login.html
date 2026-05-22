@@ -1,18 +1,24 @@
-<h1>Login</h1>
+!<h1>Login</h1>
 
 <form method="POST">
     {% csrf_token %}
 
     {{ form.as_p }}
 
-    <button type="submit">Login</button>
-    <a href="/signup/">
-    signup
-</a>
+    <button type="submit">
+        Login
+    </button>
+    <a href="/signup">
+        <button type="button">
+            signup
+        </button> 
+    </a>
+    <a href="/accounts/google/login"
+           class="btn btn-google w-100 d-flex align-items-center justify-content-center gap-2">
+
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20">
+            Continue with Google
+    </a>
+
+    
 </form>
-
-<hr>
-
-<a href="/accounts/google/login/">
-    Continue with Google
-</a>

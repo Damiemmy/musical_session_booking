@@ -12,6 +12,7 @@ class CustomUser(AbstractUser):
         ('patient', 'Patient'),
     )
     role = models.CharField(max_length=20,choices=ROLE_CHOICES,default='patient')
+    email = models.EmailField(unique=True)
 
 
 # class Doctor(models.Model):
