@@ -1,7 +1,37 @@
-<h1>
-    Booking Failed
-</h1>
+{% extends "base.html" %}
 
-<p>
-    Slot already booked.
-</p>
+{% block content %}
+
+<div class="min-h-[calc(100vh-140px)] flex items-center justify-center px-4 relative overflow-hidden bg-black">
+
+    <!-- Glow Background -->
+    <div class="absolute inset-0">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-red-600/20 blur-3xl rounded-full"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-700/20 blur-3xl rounded-full"></div>
+    </div>
+
+    <!-- Card -->
+    <div class="relative z-10 w-full max-w-md">
+
+        <div class="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 text-center">
+
+            <div class="text-5xl mb-4">❌</div>
+
+            <h1 class="text-2xl font-bold text-white">Booking Failed</h1>
+
+            <p class="text-gray-400 mt-3 text-sm">
+                Slot already booked. Please choose another available time.
+            </p>
+
+            <a href="{% url 'available_slots' %}"
+               class="inline-block mt-6 px-6 py-3 bg-red-600 hover:bg-red-500 rounded-xl font-semibold transition">
+                Back to Slots
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

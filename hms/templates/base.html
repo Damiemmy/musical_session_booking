@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johnsonix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex flex-col bg-black text-white">
+
+<!-- ================= HEADER ================= -->
+<header class="w-full fixed top-0 left-0 z-50 bg-black/60 backdrop-blur-xl border-b border-white/10">
+
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+
+        <a href="/" class="text-xl font-bold tracking-wide flex items-center gap-2">
+            🎧 <span>Johnsonix</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-6 text-sm text-gray-300">
+
+            <a href="/" class="hover:text-white transition">Home</a>
+
+            {% if user.is_authenticated %}
+
+                {% if user.role == "doctor" %}
+                    <a href="{% url 'doctor_slots' %}" class="hover:text-white transition">My Studio</a>
+                    <a href="{% url 'create_slot' %}" class="hover:text-white transition">Create Slot</a>
+                {% endif %}
+
+                {% if user.role == "patient" %}
+                    <a href="{% url 'doctors_list' %}" class="hover:text-white transition">Discover Producers</a>
+                {% endif %}
+
+                <span class="text-purple-400 font-semibold">
+                    Hi, {{ user.username }}
+                </span>
+
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="bg-red-600 hover:bg-red-500 px-3 py-1 rounded-lg text-xs">
+                        Logout
+                    </button>
+                </form>
+
+            {% else %}
+
+                <a href="{% url 'login' %}" class="hover:text-white transition">Login</a>
+                <a href="{% url 'signup' %}" class="bg-indigo-600 px-3 py-1 rounded-lg hover:bg-indigo-500 transition">
+                    Signup
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+        <!-- Mobile button -->
+        <button id="menuBtn" class="md:hidden text-white text-2xl">
+            ☰
+        </button>
+
+    </div>
+</header>
+
+<!-- ================= OVERLAY ================= -->
+<div id="overlay"
+     class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-40 md:hidden">
+</div>
+
+<!-- ================= MOBILE MENU ================= -->
+<div id="mobileMenu"
+     class="fixed top-0 left-0 w-full h-full z-50 md:hidden
+            transform -translate-y-full transition-transform duration-300 ease-in-out
+            bg-black/95 backdrop-blur-xl px-6 py-6">
+
+    <!-- Top bar -->
+    <div class="flex items-center justify-between mb-8">
+
+        <h2 class="text-lg font-bold">🎧 Menu</h2>
+
+        <!-- CLOSE BUTTON -->
+        <button id="closeMenu" class="text-white text-2xl">
+            ✕
+        </button>
+
+    </div>
+
+    <div class="space-y-4 text-sm">
+
+        <a href="/" class="block hover:text-white">Home</a>
+
+        {% if user.is_authenticated %}
+
+            {% if user.role == "doctor" %}
+                <a href="{% url 'doctor_slots' %}" class="block">My Studio</a>
+                <a href="{% url 'create_slot' %}" class="block">Create Slot</a>
+            {% endif %}
+
+            {% if user.role == "patient" %}
+                <a href="{% url 'doctors_list' %}" class="block">Discover Producers</a>
+            {% endif %}
+
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="text-red-400">Logout</button>
+            </form>
+
+        {% else %}
+
+            <a href="{% url 'login' %}" class="block">Login</a>
+            <a href="{% url 'signup' %}" class="block text-indigo-400">Signup</a>
+
+        {% endif %}
+
+    </div>
+</div>
+
+<!-- ================= CONTENT ================= -->
+<main class="flex-1 pt-24">
+    {% block content %}{% endblock %}
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="border-t border-white/10 py-6 text-center text-xs text-gray-400 bg-black/40 backdrop-blur-md mt-10">
+    <p>© 2026 Johnsonix Studio. All rights reserved.</p>
+    <p class="mt-1">Built for artists & producers 🎶</p>
+</footer>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const closeMenu = document.getElementById("closeMenu");
+    const overlay = document.getElementById("overlay");
+
+    function openMenu() {
+        mobileMenu.classList.remove("-translate-y-full");
+        overlay.classList.remove("hidden");
+    }
+
+    function closeMenuFunc() {
+        mobileMenu.classList.add("-translate-y-full");
+        overlay.classList.add("hidden");
+    }
+
+    menuBtn.addEventListener("click", openMenu);
+    closeMenu.addEventListener("click", closeMenuFunc);
+    overlay.addEventListener("click", closeMenuFunc);
+</script>
+
+</body>
+</html>

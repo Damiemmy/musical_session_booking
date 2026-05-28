@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-140px)] flex items-center justify-center px-4 relative overflow-hidden">
+
+    <div class="absolute inset-0 bg-black"></div>
+
+    <!-- Glow -->
+    <div class="absolute inset-0">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-700 blur-3xl opacity-30 rounded-full"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600 blur-3xl opacity-20 rounded-full"></div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-md">
+
+        <div class="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-6">
+
+            <!-- HEADER -->
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold">🎛 Edit Session Slot</h1>
+                <p class="text-gray-400 text-xs mt-1">Update your studio availability</p>
+            </div>
+
+            <form method="POST" class="space-y-5">
+                {% csrf_token %}
+
+                <!-- START TIME -->
+                <div>
+                    <label class="text-xs text-gray-300">Start Time</label>
+                    <div class="relative mt-1">
+
+                        <!-- INPUT -->
+                        <div>
+                            {{ form.start_time }}
+                        </div>
+
+                        <!-- CLICKABLE ICON -->
+                        <span onclick="openStartPicker()"
+                              class="absolute right-3 top-3 text-gray-500 text-sm cursor-pointer select-none">
+                            ⏰
+                        </span>
+
+                    </div>
+                </div>
+
+                <!-- END TIME -->
+                <div>
+                    <label class="text-xs text-gray-300">End Time</label>
+                    <div class="relative mt-1">
+
+                        <!-- INPUT -->
+                        <div>
+                            {{ form.end_time }}
+                        </div>
+
+                        <!-- CLICKABLE ICON -->
+                        <span onclick="openEndPicker()"
+                              class="absolute right-3 top-3 text-gray-500 text-sm cursor-pointer select-none">
+                            ⏳
+                        </span>
+
+                    </div>
+                </div>
+
+                <!-- ERROR DISPLAY -->
+                {% if form.errors %}
+                <div class="bg-red-500/10 border border-red-500/30 text-red-300 text-xs p-3 rounded-lg">
+                    Please check your input and try again.
+                </div>
+                {% endif %}
+
+                <!-- SUBMIT -->
+                <button type="submit"
+                    class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600
+                    hover:from-purple-500 hover:to-indigo-500 font-semibold transition shadow-lg">
+                    Save Changes 🎧
+                </button>
+
+                <a href="{% url 'doctor_slots' %}"
+                   class="block text-center text-sm text-gray-400 hover:text-white mt-2">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+    function openStartPicker() {
+        const el = document.querySelector("input[name='start_time']");
+        if (!el) return;
+
+        if (el.showPicker) {
+            el.showPicker();
+        } else {
+            el.focus();
+        }
+    }
+
+    function openEndPicker() {
+        const el = document.querySelector("input[name='end_time']");
+        if (!el) return;
+
+        if (el.showPicker) {
+            el.showPicker();
+        } else {
+            el.focus();
+        }
+    }
+</script>
+
+{% endblock %}

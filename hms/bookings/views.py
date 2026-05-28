@@ -12,7 +12,14 @@ from .models import AvailabilitySlot, Booking
 from django.contrib.auth import get_user_model
 from accounts.decorators import patient_required
 
+from django.template.loader import render_to_string
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+
 from accounts.utils import trigger_email
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 
 from google.oauth2.credentials import Credentials
@@ -33,7 +40,7 @@ def create_slot_view(request):
 
             slot = form.save(commit=False)
 
-            slot.doctor = request.user
+            slot.producer = request.user
 
             slot.save()
 
@@ -52,7 +59,7 @@ def create_slot_view(request):
 def doctor_slots_view(request):
 
     slots = AvailabilitySlot.objects.filter(
-        doctor=request.user
+        producer=request.user
     ).order_by("start_time")
 
     return render(request, "bookings/doctor_slots.html", {
@@ -64,29 +71,27 @@ def doctor_slots_view(request):
 @patient_required
 def doctors_list_view(request):
 
-    doctors = User.objects.filter(
-        role="doctor"
+    producer = User.objects.filter(
+        role="producer"
     )
 
     return render(request, "bookings/doctors_list.html", {
-        "doctors": doctors
+        "producers": producer
     })
 
 
 @login_required
 @patient_required
-def doctor_available_slots_view(request, doctor_id):
-
-    doctor = User.objects.get(id=doctor_id)
-
+def doctor_available_slots_view(request, producer_id):
+    producer = User.objects.get(id=producer_id)
     slots = AvailabilitySlot.objects.filter(
-        doctor=doctor,
+        producer=producer,
         is_booked=False,
         start_time__gt=timezone.now()
     ).order_by("start_time")
 
     return render(request, "bookings/available_slots.html", {
-        "doctor": doctor,
+        "producer": producer,
         "slots": slots
     })
 
@@ -108,41 +113,115 @@ def book_slot_view(request, slot_id):
 
     # 3. ALWAYS create booking (core system)
     booking = Booking.objects.create(
-        patient=request.user,
+        artist=request.user,
         slot=slot
     )
 
-    # 4. send email (safe independent process)
-    trigger_email(
-        trigger="BOOKING_CONFIRMATION",
-        email=request.user.email,
-        username=request.user.username
-    )
+    # =========================
+    # 🎧 ARTIST EMAIL (CONFIRMATION)
+    # =========================
+    try:
+        artist_html = render_to_string("emails/artist_booking_confirmation.html", {
+            "user": request.user,
+            "slot": slot,
+            "producer": slot.producer,
+        })
 
-    # 5. OPTIONAL Google Calendar sync (patient)
+        artist_email = EmailMessage(
+            subject="🎧 Booking Confirmed - Johnsonix Studio",
+            body=artist_html,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[request.user.email],
+        )
+        artist_email.content_subtype = "html"
+        artist_email.send(fail_silently=True)
+
+    except Exception as e:
+        print("Artist email failed:", e)
+
+    # =========================
+    # 🚨 PRODUCER EMAIL (NEW BOOKING ALERT)
+    # =========================
+    try:
+        producer_html = render_to_string("emails/producer_new_booking.html", {
+            "producer": slot.producer,
+            "artist": request.user,
+            "slot": slot,
+        })
+
+        producer_email = EmailMessage(
+            subject="🚨 New Booking on Your Slot - Johnsonix",
+            body=producer_html,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[slot.producer.email],
+        )
+        producer_email.content_subtype = "html"
+        producer_email.send(fail_silently=True)
+
+    except Exception as e:
+        print("Producer email failed:", e)
+
+    # =========================
+    # 📅 GOOGLE CALENDAR (ARTIST)
+    # =========================
     try:
         create_google_calendar_event(
             user=request.user,
             slot=slot,
-            title=f"Appointment with Dr. {slot.doctor.username}"
+            title=f"Appointment with Prod. {slot.producer.username}"
         )
     except Exception as e:
-        print("Patient calendar sync failed:", e)
+        print("Artist calendar sync failed:", e)
 
-    # 6. OPTIONAL Google Calendar sync (doctor)
+    # =========================
+    # 📅 GOOGLE CALENDAR (PRODUCER)
+    # =========================
     try:
         create_google_calendar_event(
-            user=slot.doctor,
+            user=slot.producer,
             slot=slot,
-            title=f"Appointment with {request.user.username}"
+            title=f"Session with {request.user.username}"
         )
     except Exception as e:
-        print("Doctor calendar sync failed:", e)
+        print("Producer calendar sync failed:", e)
 
     # 7. success response (booking is ALWAYS successful)
     return render(request, "bookings/booking_success.html", {
         "slot": slot
     })
+
+@login_required
+def edit_slot(request, slot_id):
+    slot = AvailabilitySlot.objects.get(id=slot_id)
+
+    if request.method == "POST":
+        form = AvailabilitySlotForm(request.POST, instance=slot)
+        if form.is_valid():
+            form.save()
+            return redirect("doctor_slots")
+    else:
+        form = AvailabilitySlotForm(instance=slot)
+
+    return render(request, "bookings/edit_slot.html", {"form": form})
+
+
+@login_required
+def delete_slot(request, slot_id):
+    slot = get_object_or_404(AvailabilitySlot, id=slot_id)
+
+    # 🔒 only owner can delete
+    if slot.producer != request.user:
+        return redirect("doctor_slots")
+
+    if request.method == "POST":
+        slot.delete()
+        return redirect("doctor_slots")
+
+    return render(request, "bookings/delete_slot_confirm.html", {
+        "slot": slot
+    })
+
+
 
 def create_google_calendar_event(user, slot, title):
 
@@ -180,3 +259,18 @@ def create_google_calendar_event(user, slot, title):
         calendarId="primary",
         body=event
     ).execute()
+
+@login_required
+@patient_required
+def my_bookings_view(request):
+
+    bookings = Booking.objects.select_related(
+        "slot",
+        "slot__producer"
+    ).filter(
+        artist=request.user
+    ).order_by("-id")
+
+    return render(request, "bookings/my_bookings.html", {
+        "bookings": bookings
+    })

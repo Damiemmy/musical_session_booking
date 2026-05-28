@@ -8,10 +8,10 @@ from django.conf import settings
 class CustomUser(AbstractUser):
 
     ROLE_CHOICES = (
-        ('doctor', 'Doctor'),
-        ('patient', 'Patient'),
+        ('producer', 'Producer'),
+        ('artist', 'Artist'),
     )
-    role = models.CharField(max_length=20,choices=ROLE_CHOICES,default='patient')
+    role = models.CharField(max_length=20,choices=ROLE_CHOICES,default='artist')
     email = models.EmailField(unique=True)
 
 

@@ -1,24 +1,147 @@
-!<h1>Login</h1>
+{% extends "base.html" %}
 
-<form method="POST">
-    {% csrf_token %}
+{% block content %}
 
-    {{ form.as_p }}
+<div class="relative min-h-[90vh] overflow-hidden bg-black text-white">
 
-    <button type="submit">
-        Login
-    </button>
-    <a href="/signup">
-        <button type="button">
-            signup
-        </button> 
-    </a>
-    <a href="/accounts/google/login"
-           class="btn btn-google w-100 d-flex align-items-center justify-content-center gap-2">
+    <!-- MUSICAL BACKGROUND IMAGE -->
+    <div class="absolute inset-0">
+        <img 
+            src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
+            alt="music background"
+            class="w-full h-full object-cover opacity-40 scale-105"
+        >
+    </div>
 
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20">
-            Continue with Google
-    </a>
+    <!-- DARK OVERLAY -->
+    <div class="absolute inset-0 bg-black/70"></div>
 
-    
-</form>
+    <!-- GLOW EFFECTS -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-fuchsia-600 rounded-full blur-3xl opacity-20"></div>
+        <div class="absolute top-20 right-0 w-96 h-96 bg-purple-700 rounded-full blur-3xl opacity-20"></div>
+        <div class="absolute bottom-0 left-1/3 w-96 h-96 bg-indigo-600 rounded-full blur-3xl opacity-20"></div>
+    </div>
+
+    <!-- MUSIC WAVE EFFECT -->
+    <div class="absolute inset-0 opacity-[0.05]">
+        <div class="absolute top-1/2 left-0 w-full h-[2px] bg-white"></div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="relative z-10 flex items-center justify-center min-h-[90vh] px-4 py-6">
+
+        <!-- LOGIN CARD -->
+        <div class="w-full max-w-md">
+
+            <div class="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl shadow-[0_0_40px_rgba(168,85,247,0.2)] p-6 sm:p-8">
+
+                <!-- LOGO SPACE -->
+                <div class="flex justify-center mb-5">
+                    <img 
+                        src="https://i.imgur.com/IbDcEPU.png" 
+                        alt="Johnsonix Logo"
+                        class="w-28 sm:w-32 object-contain drop-shadow-[0_0_25px_rgba(168,85,247,0.5)]"
+                    >
+                </div>
+
+                <!-- HEADER -->
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-wide">
+                        Welcome Back 🎧
+                    </h1>
+
+                    <p class="text-gray-300 text-sm mt-2 leading-relaxed">
+                        Step back into your musical universe and continue creating magic.
+                    </p>
+                </div>
+
+                <!-- FORM -->
+                <form method="POST" class="space-y-5">
+
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="bg-red-500/10 border border-red-500/30 text-red-200 px-4 py-3 rounded-2xl text-sm">
+
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <p class="mb-1">
+                                        <span class="font-semibold">{{ field.label }}:</span>
+                                        {{ error }}
+                                    </p>
+                                {% endfor %}
+                            {% endfor %}
+
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-1">{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+                    {% endif %}
+
+                    <!-- USERNAME -->
+                    <div>
+                        <label class="block text-sm text-gray-300 mb-2">Username</label>
+
+                        <input 
+                            type="text"
+                            name="username"
+                            placeholder="Enter your username"
+                            class="w-full px-4 py-3 rounded-2xl bg-black/40 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                        >
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div>
+                        <label class="block text-sm text-gray-300 mb-2">Password</label>
+
+                        <input 
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            class="w-full px-4 py-3 rounded-2xl bg-black/40 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                        >
+                    </div>
+
+                    <!-- REMEMBER + FORGOT -->
+                    <div class="flex items-center justify-between text-sm">
+
+                        <label class="flex items-center gap-2 text-gray-300">
+                            <input type="checkbox" class="accent-purple-500">
+                            Remember me
+                        </label>
+
+                        <a href="/forgot-password" class="text-purple-300 hover:text-purple-200 transition">
+                            Forgot Password?
+                        </a>
+
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button 
+                        type="submit"
+                        class="w-full py-3 rounded-2xl bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] transition-all duration-300 font-bold tracking-wide"
+                    >
+                        Login To Studio
+                    </button>
+
+                    <!-- SIGNUP -->
+                    <p class="text-center text-sm text-gray-400 pt-2">
+                        Don’t have an account?
+                        <a href="/signup/" class="text-purple-300 hover:text-purple-200 font-semibold transition">
+                            Create one
+                        </a>
+                    </p>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

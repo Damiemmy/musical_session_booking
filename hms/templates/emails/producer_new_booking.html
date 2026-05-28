@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>New Booking Alert</title>
+</head>
+
+<body style="margin:0; padding:0; background:#0a0a0a; font-family:Arial,sans-serif; color:#fff;">
+
+<div style="max-width:600px; margin:0 auto; padding:40px 20px;">
+
+    <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+                border-radius:20px; padding:30px; text-align:center;
+                box-shadow:0 0 40px rgba(255,0,100,0.25);">
+
+        <h1 style="font-size:24px;">🚨 New Booking Alert</h1>
+
+        <p style="color:#ccc; font-size:14px;">
+            A new artist just booked your studio slot.
+        </p>
+
+        <div style="margin-top:20px; padding:15px; border-radius:12px;
+                    background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3);
+                    text-align:left;">
+
+            <p style="margin:0;"><b>Artist:</b> {{ artist.username }}</p>
+            <p style="margin:0;"><b>Email:</b> {{ artist.email }}</p>
+            <p style="margin:0;"><b>Slot Time:</b> {{ slot.start_time }}</p>
+
+        </div>
+
+        <p style="margin-top:20px; font-size:12px; color:#888;">
+            Prepare your setup 🎛️ — your studio is in demand.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

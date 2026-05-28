@@ -1,15 +1,184 @@
-<h1>Patient Dashboard</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johnsonix Artist Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-<p>
-    Welcome {{ request.user.username }}
-</p>
+<body class="bg-black text-white min-h-screen flex flex-col md:flex-row">
 
-<a href="{% url 'doctors_list' %}">
-    View Doctors
-</a>
+<!-- ================= MOBILE TOP BAR ================= -->
+<div class="md:hidden flex items-center justify-between p-4 border-b border-gray-800 bg-black">
+    <h1 class="text-lg font-bold">🎤 Johnsonix Artists</h1>
 
-<br><br>
+    <!-- OPEN SIDEBAR -->
+    <button onclick="openSidebar()"
+            class="px-3 py-2 bg-indigo-700 rounded-lg">
+        ☰
+    </button>
+</div>
 
-<a href="{% url 'logout' %}">
-    Logout
-</a>
+<!-- ================= SIDEBAR ================= -->
+<aside id="sidebar"
+    class="hidden md:flex md:w-72 w-full fixed md:static h-full md:h-auto z-50
+           bg-gradient-to-b from-indigo-900 via-black to-black p-6 flex-col justify-between">
+
+    <div>
+
+        <!-- HEADER + CLOSE BUTTON -->
+        <div class="flex items-start justify-between">
+            <div>
+                <h1 class="text-2xl font-bold tracking-wide">🎤 Johnsonix Artists</h1>
+                <p class="text-gray-400 text-sm mt-1">Your sound. Your producers.</p>
+            </div>
+
+            <!-- CLOSE BUTTON (MOBILE ONLY) -->
+            <button onclick="closeSidebar()"
+                    class="md:hidden text-white text-2xl leading-none">
+                ✕
+            </button>
+        </div>
+
+        <nav class="mt-10 space-y-3">
+
+            <a href="{% url 'doctors_list' %}"
+               class="block px-4 py-3 rounded-lg bg-indigo-700 hover:bg-indigo-600 transition">
+                🔍 Discover Producers
+            </a>
+ 
+            <a href="/bookings/my-bookings/" class="block px-4 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 cursor-pointer transition">
+                📅 My Bookings
+            </a>
+
+            <a href="{% url 'doctors_list' %}" class="block px-4 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition">
+                ❤️ Saved Producers
+            </a>
+
+            <a href="{% url 'doctors_list' %}" class="block px-4 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition">
+                🎵 My Tracks
+            </a>
+
+            <a href='/' class="block px-4 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition">
+                📊 Insights
+            </a>
+
+        </nav>
+    </div>
+
+    <form method="post" action="{% url 'logout' %}" class="mt-10">
+        {% csrf_token %}
+        <button class="w-full bg-red-600 hover:bg-red-500 py-3 rounded-lg font-semibold">
+            Logout
+        </button>
+    </form>
+</aside>
+
+<!-- ================= OVERLAY ================= -->
+<div id="overlay"
+     onclick="closeSidebar()"
+     class="hidden fixed inset-0 bg-black/70 z-40 md:hidden">
+</div>
+
+<!-- ================= MAIN ================= -->
+<main class="flex-1 p-4 md:p-10">
+
+    <!-- HERO -->
+    <div class="relative overflow-hidden rounded-2xl p-6 md:p-10
+                bg-gradient-to-r from-indigo-900 via-black to-black border border-indigo-900">
+
+        <div class="absolute -top-20 -left-20 w-72 md:w-96 h-72 md:h-96 bg-indigo-600 blur-3xl opacity-30 rounded-full"></div>
+        <div class="absolute bottom-0 right-0 w-72 md:w-96 h-72 md:h-96 bg-purple-600 blur-3xl opacity-20 rounded-full"></div>
+
+        <div class="relative z-10">
+            <h2 class="text-2xl md:text-4xl font-bold">
+                Welcome back, {{ request.user.username }} 🎤
+            </h2>
+
+            <p class="text-gray-300 mt-2 text-sm md:text-lg">
+                The studio is open. Discover producers and build your next hit.
+            </p>
+
+            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+
+                <a href="{% url 'doctors_list' %}"
+                   class="bg-white text-black px-5 py-3 rounded-lg font-semibold text-center hover:bg-gray-200">
+                    🔥 Discover Producers
+                </a>
+
+                <a href="/bookings/my-bookings/" class="bg-indigo-600 px-5 py-3 rounded-lg font-semibold text-center hover:bg-indigo-500">
+                    📅 View My Bookings
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-8">
+
+        <div class="bg-white/5 border border-white/10 backdrop-blur-xl p-6 rounded-2xl hover:scale-105 transition">
+            <h3 class="text-gray-400 text-sm">Booked Sessions</h3>
+            <p class="text-3xl font-bold mt-2">{{booked_by_users}}</p>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 backdrop-blur-xl p-6 rounded-2xl hover:scale-105 transition">
+            <h3 class="text-gray-400 text-sm">Saved Producers</h3>
+            <p class="text-3xl font-bold mt-2">0</p>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 backdrop-blur-xl p-6 rounded-2xl hover:scale-105 transition">
+            <h3 class="text-gray-400 text-sm">Tracks Uploaded</h3>
+            <p class="text-3xl font-bold mt-2">0</p>
+        </div>
+
+    </div>
+
+    <!-- FEATURE SECTION -->
+    <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:scale-[1.02] transition">
+            <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop"
+                 class="w-full h-56 md:h-64 object-cover">
+
+            <div class="p-5">
+                <h4 class="text-lg md:text-xl font-semibold">Find Your Sound</h4>
+                <p class="text-gray-400 text-sm mt-1">
+                    Connect with world-class producers and build your next hit record.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:scale-[1.02] transition">
+            <img src="https://i.imgur.com/5o1spMd.jpeg"
+                 class="w-full h-56 md:h-64 object-cover">
+
+            <div class="p-5">
+                <h4 class="text-lg md:text-xl font-semibold">Your Creative Journey</h4>
+                <p class="text-gray-400 text-sm mt-1">
+                    Track sessions, manage bookings, and grow your music career.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<!-- ================= JS CONTROLS ================= -->
+<script>
+    function openSidebar() {
+        document.getElementById('sidebar').classList.remove('hidden');
+        document.getElementById('overlay').classList.remove('hidden');
+    }
+
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.add('hidden');
+        document.getElementById('overlay').classList.add('hidden');
+    }
+</script>
+
+</body>
+</html>

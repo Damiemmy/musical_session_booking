@@ -1,35 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <h1>
-    Available Slots for Dr. {{ doctor.username }}
-</h1>
+{% extends "base.html" %}
 
-{% for slot in slots %}
+{% block content %}
 
-    <p>
+<div class="min-h-[calc(100vh-140px)] bg-black relative overflow-hidden px-4 py-10">
 
-        {{ slot.start_time }}
-        →
-        {{ slot.end_time }}
+    <!-- Background Glow -->
+    <div class="absolute inset-0">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-purple-700/20 blur-3xl rounded-full"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-700/20 blur-3xl rounded-full"></div>
+    </div>
 
-        <a href="{% url 'book_slot' slot.id %}">
-            Book
-        </a>
+    <div class="relative z-10 max-w-5xl mx-auto">
 
-    </p>
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-white">
+                Available Studio Slots 🎧
+            </h1>
+            <p class="text-gray-400 text-sm mt-2">
+                Book a session with Prod. {{ producer.username }}
+            </p>
+        </div>
 
-{% empty %}
+        <!-- Slots -->
+        <div class="grid gap-4 md:grid-cols-2">
 
-    <p>No available slots.</p>
+            {% for slot in slots %}
 
-{% endfor %}
+                <div class="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl p-5 flex items-center justify-between hover:scale-[1.02] transition">
 
-</body>
-</html>
+                    <div>
+                        <p class="text-white font-semibold">
+                            {{ slot.start_time }} → {{ slot.end_time }}
+                        </p>
+
+                        <p class="text-xs text-gray-400 mt-1">
+                            Studio session available
+                        </p>
+                    </div>
+
+                    <a href="{% url 'book_slot' slot.id %}"
+                       class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-sm font-semibold transition">
+                        Book
+                    </a>
+
+                </div>
+
+            {% empty %}
+
+                <div class="col-span-2 text-center text-gray-400">
+                    No available slots at the moment.
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

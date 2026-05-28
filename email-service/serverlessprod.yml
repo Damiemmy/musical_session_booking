@@ -1,0 +1,19 @@
+service: email-service
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: eu-north-1
+
+  environment:
+    GMAIL_EMAIL: damisaemmanuel778@gmail.com
+    GMAIL_APP_PASSWORD: ciuhsoudxdmkzicn
+
+functions:
+  sendEmail:
+    handler: handler.send_email
+
+    events:
+      - httpApi:
+          path: /send-email
+          method: POST

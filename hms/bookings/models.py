@@ -7,7 +7,7 @@ from django.conf import settings
 
 class AvailabilitySlot(models.Model):
 
-    doctor = models.ForeignKey(
+    producer= models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
@@ -18,12 +18,12 @@ class AvailabilitySlot(models.Model):
     is_booked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.doctor.username} - {self.start_time}"
+        return f"{self.producer.username} - {self.start_time}"
 
 
 class Booking(models.Model):
 
-    patient = models.ForeignKey(
+    artist = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
@@ -38,4 +38,4 @@ class Booking(models.Model):
     )
 
     def __str__(self):
-        return f"{self.patient.username} booked {self.slot}"
+        return f"{self.artist.username} booked {self.slot}"

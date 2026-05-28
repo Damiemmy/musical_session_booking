@@ -5,7 +5,7 @@ def doctor_required(view_func):
 
     def wrapper(request, *args, **kwargs):
 
-        if request.user.role != "doctor":
+        if request.user.role != "producer":
             return redirect("dashboard")
 
         return view_func(request, *args, **kwargs)
@@ -16,7 +16,7 @@ def patient_required(view_func):
 
     def wrapper(request, *args, **kwargs):
 
-        if request.user.role != "patient":
+        if request.user.role != "artist":
             return redirect("dashboard")
 
         return view_func(request, *args, **kwargs)

@@ -1,15 +1,38 @@
-<h1>Doctors</h1>
+{% extends "base.html" %}
 
-{% for doctor in doctors %}
+{% block content %}
+<div class="min-h-[calc(100vh-140px)] px-4 py-10 relative overflow-hidden">
 
-    <p>
+    <div class="absolute inset-0 bg-black"></div>
 
-        Dr. {{ doctor.username }}
+    <div class="absolute inset-0">
+        <div class="absolute -top-40 left-0 w-96 h-96 bg-purple-700 blur-3xl opacity-20 rounded-full"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600 blur-3xl opacity-20 rounded-full"></div>
+    </div>
 
-        <a href="{% url 'doctor_slots_available' doctor.id %}">
-            View Slots
-        </a>
+    <div class="relative z-10 max-w-6xl mx-auto">
 
-    </p>
+        <h1 class="text-3xl font-bold mb-6">🎤 Discover Producers</h1>
 
-{% endfor %}
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            {% for producer in producers %}
+            <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:scale-[1.03] transition">
+
+                <div class="text-2xl mb-2">🎧</div>
+                <h2 class="text-xl font-semibold">Prod. {{ producer.username }}</h2>
+                <p class="text-gray-400 text-sm mt-2">Music Producer • Studio Available</p>
+
+                <a href="{% url 'doctor_slots_available' producer.id %}"
+                   class="inline-block mt-4 px-4 py-2 bg-purple-600 rounded-lg text-sm hover:bg-purple-500">
+                    View Slots
+                </a>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

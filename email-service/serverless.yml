@@ -4,6 +4,10 @@ provider:
   name: aws
   runtime: python3.12
 
+  environment:
+  GMAIL_EMAIL: yourgmail@gmail.com
+  GMAIL_APP_PASSWORD: your_app_password
+
 plugins:
   - serverless-offline
 
@@ -15,3 +19,4 @@ functions:
       - http:
           path: send-email
           method: post
+

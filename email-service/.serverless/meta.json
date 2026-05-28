@@ -1,0 +1,54 @@
+{
+  "/mnt/c/Users/blog/Desktop/myprojects/Banao/hms-project/email-service/serverless.yml": {
+    "versionFramework": "4.36.1",
+    "servicePath": "/mnt/c/Users/blog/Desktop/myprojects/Banao/hms-project/email-service/serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "email-service",
+      "provider": {
+        "name": "aws",
+        "runtime": "python3.12",
+        "environment": null,
+        "GMAIL_EMAIL": "yourgmail@gmail.com",
+        "GMAIL_APP_PASSWORD": "<REDACTED>"
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "functions": {
+        "sendEmail": {
+          "handler": "handler.send_email",
+          "events": [
+            {
+              "http": {
+                "path": "send-email",
+                "method": "post"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "python3.12",
+      "environment": null,
+      "GMAIL_EMAIL": "yourgmail@gmail.com",
+      "GMAIL_APP_PASSWORD": "<REDACTED>"
+    },
+    "error": {
+      "message": "Unable to reach the Serverless API (fetch failed; getaddrinfo EAI_AGAIN core.serverless.com; code: EAI_AGAIN).\nPlease verify your network connection and try again.",
+      "code": "AUTH_FAILED"
+    },
+    "serviceRawFile": "service: email-service\r\n\r\nprovider:\r\n  name: aws\r\n  runtime: python3.12\r\n\r\n  environment:\r\n  GMAIL_EMAIL: yourgmail@gmail.com\r\n  GMAIL_APP_PASSWORD: your_app_password\r\n\r\nplugins:\r\n  - serverless-offline\r\n\r\nfunctions:\r\n  sendEmail:\r\n    handler: handler.send_email\r\n\r\n    events:\r\n      - http:\r\n          path: send-email\r\n          method: post\r\n\r\n",
+    "command": [
+      "offline"
+    ],
+    "options": {},
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}
