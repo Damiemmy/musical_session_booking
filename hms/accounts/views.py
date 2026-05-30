@@ -70,7 +70,6 @@ def signup_view(request):
     
 @login_required
 def dashboard_view(request):
-
     if request.user.role == "producer":
         user = request.user
 
@@ -174,6 +173,29 @@ def reset_password(request, uidb64, token):
         return redirect("login")
 
     return render(request, "accounts/reset_password.html")
+
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
+
+
+class CustomLoginView(LoginView):
+
+    template_name = "accounts/login.html"
+
+    def dispatch(self, request, *args, **kwargs):
+
+        # If user is already logged in
+        if request.user.is_authenticated:
+
+            if request.user.role == "producer":
+                return redirect("dashboard")
+
+            elif request.user.role == "artist":
+                return redirect("dashboard")
+
+            return redirect("/")
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 

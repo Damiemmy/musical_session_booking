@@ -1,11 +1,15 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-*2(a@9b)^ybf!&r(=nw83e+p4er+s2=bq^t8jhed#(@x^nzd^o'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
@@ -71,8 +75,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -91,37 +99,37 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/login/"
-
+LOGIN_URL='login'
 # =========================
 # ALLAUTH CLEAN CONFIG
 # =========================
 
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_EMAIL_VERIFICATION = "none"
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_UNIQUE_EMAIL = True
 
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_LOGIN_ON_GET = True
-SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
-SOCIALACCOUNT_EMAIL_REQUIRED = True
-SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
-SOCIALACCOUNT_STORE_TOKENS = True
-SOCIALACCOUNT_ADAPTER = "accounts.adapter.CustomSocialAccountAdapter"
+# SOCIALACCOUNT_AUTO_SIGNUP = True
+# SOCIALACCOUNT_LOGIN_ON_GET = True
+# SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+# SOCIALACCOUNT_EMAIL_REQUIRED = True
+# SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+# SOCIALACCOUNT_STORE_TOKENS = True
+# SOCIALACCOUNT_ADAPTER = "accounts.adapter.CustomSocialAccountAdapter"
 
-SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "SCOPE": [
-            "openid",
-            "email",
-            "profile",
-            "https://www.googleapis.com/auth/calendar",
-        ],
-        "AUTH_PARAMS": {
-            "access_type": "offline",
-            "prompt": "consent",
-        },
-    }
-}
+# SOCIALACCOUNT_PROVIDERS = {
+#     "google": {
+#         "SCOPE": [
+#             "openid",
+#             "email",
+#             "profile",
+#             "https://www.googleapis.com/auth/calendar",
+#         ],
+#         "AUTH_PARAMS": {
+#             "access_type": "offline",
+#             "prompt": "consent",
+#         },
+#     }
+# }
 
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 465

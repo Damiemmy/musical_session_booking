@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import signup_view, dashboard_view,forgot_password,reset_password,password_reset_sent
+from .views import signup_view, dashboard_view,forgot_password,reset_password,password_reset_sent,CustomLoginView
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
@@ -8,7 +8,7 @@ urlpatterns = [
 
     path(
         "login/",
-        LoginView.as_view(
+        CustomLoginView.as_view(
             template_name="accounts/login.html"
         ),
         name="login"
